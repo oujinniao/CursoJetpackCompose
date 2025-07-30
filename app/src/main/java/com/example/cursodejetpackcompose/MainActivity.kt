@@ -13,7 +13,9 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -23,6 +25,7 @@ import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
@@ -67,22 +70,19 @@ class MainActivity : ComponentActivity() {
             horizontalAlignment = Alignment.CenterHorizontally
 
         ) {
-            Button(
-                onClick = { /*TODO*/ },
-                modifier = Modifier.padding(16.dp),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.primary,
-                    contentColor = MaterialTheme.colorScheme.onPrimary
-                ),
-                shape = RoundedCornerShape(15.dp)
-            ){
-                Icon(Icons.Default.Person, contentDescription = "Person")
-                Text(text="Presionar")
-            }
-            MyOutlinedButton()
-            MyTextButton()
-            MyImage()
-            MyIcon()
+
+                Text(text="seccion uno",
+                    style=MaterialTheme.typography.bodyLarge)
+
+            HorizontalDivider(
+                modifier=Modifier.padding(vertical=25.dp),
+                color=MaterialTheme.colorScheme.primary,
+                thickness=2.dp
+            )
+
+                Text(text="seccion dos",
+                    style=MaterialTheme.typography.bodyLarge)
+
 
         }
     }
