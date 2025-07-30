@@ -7,6 +7,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -73,32 +74,58 @@ class MainActivity : ComponentActivity() {
             horizontalAlignment = Alignment.CenterHorizontally
 
         ) {
-            CircularProgressIndicator(
-                modifier = Modifier.size(100.dp),
-                color = MaterialTheme.colorScheme.primary,
-                strokeWidth = 15.dp,
-                trackColor = Color.Green,
 
+            val backgroundColor= MaterialTheme.colorScheme.primary
+
+        Canvas(
+            modifier = Modifier
+                .size(400.dp)
+                .padding(6.dp)
+
+
+
+        ) {
+
+            drawCircle(
+                color=backgroundColor,
+                radius = size.minDimension/4   //300/4 o el radio de 75
             )
-            Spacer(modifier = Modifier.height(56.dp))
-            LinearProgressIndicator(
-                modifier=Modifier.fillMaxWidth(),
-                color=MaterialTheme.colorScheme.primary,
-                trackColor=Color.Cyan,
 
-
-                )
+        }
 
 
 
 
-            Spacer(modifier = Modifier.height(16.dp))
-            CircularProgressIndicator(
-                modifier = Modifier.size(100.dp),
-                color = MaterialTheme.colorScheme.secondary,
-                strokeWidth = 30.dp,
-                trackColor = Color.Gray,
-            )
+
+
+
+
+
+
+
+
+
+           // CircularProgressIndicator(
+             //   modifier = Modifier.size(100.dp),
+               // color = MaterialTheme.colorScheme.primary,
+                //strokeWidth = 15.dp,
+                //trackColor = Color.Green,
+
+            //)
+            //Spacer(modifier = Modifier.height(56.dp))
+            //LinearProgressIndicator(
+              //  modifier=Modifier.fillMaxWidth(),
+                //color=MaterialTheme.colorScheme.primary,
+                //trackColor=Color.Cyan,
+                //)
+
+            //Spacer(modifier = Modifier.height(16.dp))
+            //CircularProgressIndicator(
+              //  modifier = Modifier.size(100.dp),
+                //color = MaterialTheme.colorScheme.secondary,
+                //strokeWidth = 30.dp,
+                //trackColor = Color.Gray,
+            //)
 
 
 
