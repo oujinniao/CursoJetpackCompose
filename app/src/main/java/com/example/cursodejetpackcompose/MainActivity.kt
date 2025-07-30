@@ -25,6 +25,7 @@ import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -70,18 +71,22 @@ class MainActivity : ComponentActivity() {
             horizontalAlignment = Alignment.CenterHorizontally
 
         ) {
+            CircularProgressIndicator(
+                modifier = Modifier.size(100.dp),
+                color = MaterialTheme.colorScheme.primary,
+                strokeWidth = 15.dp,
+                trackColor = Color.Green,
 
-                Text(text="seccion uno",
-                    style=MaterialTheme.typography.bodyLarge)
-
-            HorizontalDivider(
-                modifier=Modifier.padding(vertical=25.dp),
-                color=MaterialTheme.colorScheme.primary,
-                thickness=2.dp
             )
+            Spacer(modifier = Modifier.height(16.dp))
+            CircularProgressIndicator(
+                modifier = Modifier.size(100.dp),
+                color = MaterialTheme.colorScheme.secondary,
+                strokeWidth = 30.dp,
+                trackColor = Color.Gray,
 
-                Text(text="seccion dos",
-                    style=MaterialTheme.typography.bodyLarge)
+
+            )
 
 
         }
