@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -28,6 +29,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
@@ -78,15 +80,26 @@ class MainActivity : ComponentActivity() {
                 trackColor = Color.Green,
 
             )
+            Spacer(modifier = Modifier.height(56.dp))
+            LinearProgressIndicator(
+                modifier=Modifier.fillMaxWidth(),
+                color=MaterialTheme.colorScheme.primary,
+                trackColor=Color.Cyan,
+
+
+                )
+
+
+
+
             Spacer(modifier = Modifier.height(16.dp))
             CircularProgressIndicator(
                 modifier = Modifier.size(100.dp),
                 color = MaterialTheme.colorScheme.secondary,
                 strokeWidth = 30.dp,
                 trackColor = Color.Gray,
-
-
             )
+
 
 
         }
