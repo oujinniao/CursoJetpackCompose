@@ -13,7 +13,9 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -43,7 +45,9 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.modifier.modifierLocalMapOf
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -65,33 +69,50 @@ class MainActivity : ComponentActivity() {
 
     @Composable
     fun Componentes() {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .border(2.dp, Color.Red)
-                .padding(16.dp),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-
-        ) {
-
-            val backgroundColor= MaterialTheme.colorScheme.primary
-
-        Canvas(
-            modifier = Modifier
-                .size(400.dp)
-                .padding(6.dp)
+     Box(
+         modifier=Modifier
+             .fillMaxSize()
 
 
+     ){
+         Image(
+             painter= painterResource(id = R.drawable.imagen_fondo),
+             contentDescription = "Imagen de fondo",
+             contentScale = ContentScale.Crop,
+             modifier = Modifier.fillMaxSize()
 
-        ) {
+         )
+         Text(text="Imagen de jet pack compose ",
+             style = TextStyle(
+                 color=Color.Red,
+                 fontSize = 30.sp,
+             ),
+             modifier = Modifier.align(Alignment.Center)
+         )
+         Button(
+             onClick = { /*TODO*/ },
+             modifier = Modifier
+                 .align(Alignment.BottomCenter)
+             .padding(50.dp),
+             shape = RoundedCornerShape(15.dp),
+             colors = ButtonDefaults.buttonColors(
+                 containerColor = MaterialTheme.colorScheme.primary,
+                 contentColor = MaterialTheme.colorScheme.onPrimary
+             )
 
-            drawCircle(
-                color=backgroundColor,
-                radius = size.minDimension/4   //300/4 o el radio de 75
-            )
+         ){
+             Text(text="presione")
+
+         }
+
+     }
+
+
+
 
         }
+    }
+
 
 
 
@@ -129,9 +150,8 @@ class MainActivity : ComponentActivity() {
 
 
 
-        }
-    }
-}
+
+
 
 @Composable
 fun MyOutlinedButton(){
