@@ -6,21 +6,25 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
@@ -45,6 +49,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
@@ -63,10 +68,61 @@ class MainActivity : ComponentActivity() {
                 //MyLazyColumn()
                 //MyLazyRowImagenes()
                 //MyLazyRowImagenesWeb()
-                MyLazyVerticalGrid()
+                //MyLazyVerticalGrid()
+                //GaleriaDeFotos()
+                MyLazyHorizontalGrid()
             }
         }
     }
+
+
+    @Composable
+    fun MyLazyHorizontalGrid() {
+        val myElementos = List(20){
+            "Elemento ${it+2}"
+        }
+        LazyHorizontalGrid (
+
+            rows = GridCells.Adaptive(100.dp),//ancho variable de alto
+            //rows = GridCells.Fixed(4),//ancho fijo de 4 columnas
+            modifier = Modifier.fillMaxSize(),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+
+        ){
+            items(myElementos){myElemento->
+                GridItemHorizontal(element = myElemento)
+            }
+        }
+
+    }
+    @Composable
+    fun GridItemHorizontal(element: String) {
+        Box(
+            modifier = Modifier
+                .width(120.dp)
+                .height(120.dp)
+                .clip(RoundedCornerShape(15.dp))
+                .background(MaterialTheme.colorScheme.primaryContainer)
+                .border(2.dp,
+                    MaterialTheme.colorScheme.primary,
+                    RoundedCornerShape(15.dp)
+                ),//definimos la forma del borde
+
+        contentAlignment = Alignment.Center,
+        ) {
+            Text(text = element,
+                color = MaterialTheme.colorScheme.onPrimaryContainer,
+                fontWeight = FontWeight.Bold,
+                fontSize = 20.sp,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.padding(16.dp),
+                )
+        }
+    }
+
+
+
 
     @Composable
     fun MyLazyVerticalGrid() {
@@ -74,7 +130,9 @@ class MainActivity : ComponentActivity() {
             "Elemento ${it+1}"
              }
         LazyVerticalGrid(
-            columns = GridCells.Adaptive(120.dp),
+            columns = GridCells.Fixed(2),//ancho fijo de 2 columnas
+
+            //columns = GridCells.Adaptive(100.dp), ancho variable de 100dp
             modifier = Modifier.fillMaxSize(),
             horizontalArrangement = Arrangement.spacedBy(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
@@ -85,6 +143,42 @@ class MainActivity : ComponentActivity() {
         }
 
     }
+
+
+
+
+
+
+    @OptIn(ExperimentalFoundationApi::class)
+    @Composable
+    fun GaleriaDeFotos(
+        urls: List<String> = listOf(
+            "https://cdn.pixabay.com/photo/2025/04/30/13/05/cat-9569386_1280.jpg",
+            "https://cdn.pixabay.com/photo/2020/05/01/08/33/building-5115897_1280.jpg",
+            "https://cdn.pixabay.com/photo/2025/07/20/13/12/little-red-riding-hood-9724469_1280.jpg",
+            "https://cdn.pixabay.com/photo/2025/06/01/16/05/mountains-9700000_1280.jpg",
+            "https://cdn.pixabay.com/photo/2025/03/15/10/45/dog-9622222_1280.jpg"
+        )
+    ) {
+        LazyVerticalGrid(
+            columns = GridCells.Fixed(2),
+            modifier = Modifier.fillMaxSize(),
+            contentPadding = PaddingValues(12.dp),
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            items(urls) { url ->
+                AsyncImage(
+                    model = url,
+                    contentDescription = "Imagen remota",
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(12.dp)),
+                    contentScale = ContentScale.Crop
+                )
+            }
+        }
+    }
+
 
 @Composable
 fun GridItem(element: String) {
