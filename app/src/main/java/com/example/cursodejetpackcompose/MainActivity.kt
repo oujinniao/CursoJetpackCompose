@@ -7,12 +7,15 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -48,180 +51,228 @@ class MainActivity : ComponentActivity() {
         setContent {
             CursoDeJetpackComposeTheme {
                 //MyConstraintLayout()
-                MyLazyColumn()
+                //MyLazyColumn()
+                MyLazyRow()
             }
         }
     }
 
-@Composable
-fun MyLazyColumn(){
+    @Composable
+    fun MyLazyRowImagenes(){
 
-val elementos = List(100){"Elemento No $it"}
+        val listImage = listOf(
+            R.drawable.conejo,
+            R.drawable.perro,
+            R.drawable.conejo,
+            R.drawable.zorro,
+            R.drawable.conejo,
+            R.drawable.zorro,
+            R.drawable.conejo,
+            R.drawable.zorro,
 
-    LazyColumn(
-        modifier = Modifier.fillMaxSize()
-            .padding(16.dp)
-
-
-    ){
-        item {
-            Text(
-            text="Encabezado de la lista",
-                color=MaterialTheme.colorScheme.primary,
-                fontSize=20.sp
             )
-        }
-
-
-        items(elementos){
-            item ->
-            Text(text = item,
-                fontSize=20.sp)
-
-        }
-
-        item {
-            Text(
-                text = "Pie de la lista",
-                color = MaterialTheme.colorScheme.primary,
-                fontSize = 20.sp
-            )
-        }
     }
 
 
-}
-
-
-    @Composable
-    fun MyConstraintLayout() {
-
-        ConstraintLayout(
+    //@Composable
+    fun MyLazyRow() {
+        val Elementos = listOf("Elemento 1", "Elemento 2", "Elemento 3", "Elemento 4")
+        LazyRow(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(20.dp)
+                .padding(16.dp),
+            horizontalArrangement = Arrangement.spacedBy(16.dp)
+
         ) {
-            val (image, name, description, button) = createRefs()
 
-            Image(
-                painter = painterResource(id = R.drawable.perfil),
-                contentDescription = "Mi perfil de imagen",
-                modifier = Modifier
-                    .size(100.dp)
-                    .padding(16.dp)
-
-                    .constrainAs(image) {
-                        top.linkTo(parent.top)
-                        start.linkTo(parent.start)
-
-                    },
-                contentScale = ContentScale.Crop,
-
+            items(Elementos) { elementos ->
+                Text(
+                    text = elementos,
+                    modifier = Modifier
+                        .padding(10.dp)
+                        .background(MaterialTheme.colorScheme.primary)
+                        .padding(16.dp),
+                    color = Color.White,
+                    fontSize = 20.sp,
+                    style = MaterialTheme.typography.bodyMedium
                 )
-            Text(
-                text = "Mi nombre es",
-                modifier = Modifier
-                    .constrainAs(name) {
-                    top.linkTo(image.top)
-                    start.linkTo(image.end, margin = 16.dp)
-                }
-            )
-            Text(
-                text = "Mi descripcion",
-                style = MaterialTheme.typography.bodyMedium,
-                     modifier = Modifier
-                    .constrainAs(description) {
-                    top.linkTo(name.bottom, margin = 4.dp)
-                    start.linkTo(name.start)
-                        end.linkTo(parent.end)
-                        width = Dimension.fillToConstraints
+
+
+
+                @Composable
+                fun MyLazyColumn() {
+
+                    val elementos = List(100) { "Elemento No $it" }
+
+                    LazyColumn(
+                        modifier = Modifier.fillMaxSize()
+                            .padding(16.dp)
+
+
+                    ) {
+                        item {
+                            Text(
+                                text = "Encabezado de la lista",
+                                color = MaterialTheme.colorScheme.primary,
+                                fontSize = 20.sp
+                            )
+                        }
+
+
+                        items(elementos) { item ->
+                            Text(
+                                text = item,
+                                fontSize = 20.sp
+                            )
+
+                        }
+
+                        item {
+                            Text(
+                                text = "Pie de la lista",
+                                color = MaterialTheme.colorScheme.primary,
+                                fontSize = 20.sp
+                            )
+                        }
+                    }
+
 
                 }
-            )
-            Button(
-                onClick = { },
-                modifier = Modifier
-                    .constrainAs(button) {
-                    top.linkTo(description.bottom, margin = 16.dp)
-                    start.linkTo(parent.start)
-                        end.linkTo(parent.end)
+
+
+                @Composable
+                fun MyConstraintLayout() {
+
+                    ConstraintLayout(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(20.dp)
+                    ) {
+                        val (image, name, description, button) = createRefs()
+
+                        Image(
+                            painter = painterResource(id = R.drawable.perfil),
+                            contentDescription = "Mi perfil de imagen",
+                            modifier = Modifier
+                                .size(100.dp)
+                                .padding(16.dp)
+
+                                .constrainAs(image) {
+                                    top.linkTo(parent.top)
+                                    start.linkTo(parent.start)
+
+                                },
+                            contentScale = ContentScale.Crop,
+
+                            )
+                        Text(
+                            text = "Mi nombre es",
+                            modifier = Modifier
+                                .constrainAs(name) {
+                                    top.linkTo(image.top)
+                                    start.linkTo(image.end, margin = 16.dp)
+                                }
+                        )
+                        Text(
+                            text = "Mi descripcion",
+                            style = MaterialTheme.typography.bodyMedium,
+                            modifier = Modifier
+                                .constrainAs(description) {
+                                    top.linkTo(name.bottom, margin = 4.dp)
+                                    start.linkTo(name.start)
+                                    end.linkTo(parent.end)
+                                    width = Dimension.fillToConstraints
+
+                                }
+                        )
+                        Button(
+                            onClick = { },
+                            modifier = Modifier
+                                .constrainAs(button) {
+                                    top.linkTo(description.bottom, margin = 16.dp)
+                                    start.linkTo(parent.start)
+                                    end.linkTo(parent.end)
+                                }
+                        ) {
+                            Text(text = "Mi boton")
+                        }
+                    }
                 }
-            ) {
-                Text(text = "Mi boton")
+
+
+                @Composable
+                fun MyOutlinedButton() {
+                    OutlinedButton(
+                        onClick = { },
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.background,
+                            contentColor = MaterialTheme.colorScheme.onPrimary
+                        ),
+                        shape = RoundedCornerShape(15.dp),
+                        border = BorderStroke(2.dp, MaterialTheme.colorScheme.primary),
+                        modifier = Modifier
+                            .shadow(4.dp, shape = RoundedCornerShape(15.dp))
+                            .padding(16.dp)
+
+                    ) {
+                        Icon(
+                            Icons.Default.Favorite,
+                            contentDescription = "Favoritos",
+                            modifier = Modifier.size(25.dp)
+                        )
+                        Text(text = "Favoritos")
+
+                    }
+
+
+                }
+
+                @Composable
+                fun MyTextButton() {
+                    TextButton(
+                        onClick = { },
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.primary
+
+
+                        )
+                    ) {
+                        Text(text = "Texto Boton")
+                    }
+
+
+                }
+
+                @Composable
+                fun MyImage() {
+                    Image(
+                        painter = painterResource(id = R.drawable.mi_imagen),
+                        contentDescription = "Mi imagen",
+                        modifier = Modifier
+                            .size(200.dp)
+                            .padding(16.dp)
+                            .clip(CircleShape)
+                            .border(2.dp, Color.Red, CircleShape),
+                        contentScale = ContentScale.Crop,
+
+                        alignment = Alignment.BottomEnd,
+                    )
+
+                }
+
+                @Composable
+                fun MyIcon() {
+                    Icon(
+                        imageVector = Icons.Default.Person,
+                        contentDescription = "Icono",
+
+                        modifier = Modifier.size(50.dp),
+                        tint = MaterialTheme.colorScheme.primary
+                    )
+
+                }
             }
         }
     }
-
-
-    @Composable
-    fun MyOutlinedButton() {
-        OutlinedButton(
-            onClick = { },
-            colors = ButtonDefaults.buttonColors(
-                containerColor = MaterialTheme.colorScheme.background,
-                contentColor = MaterialTheme.colorScheme.onPrimary
-            ),
-            shape = RoundedCornerShape(15.dp),
-            border = BorderStroke(2.dp, MaterialTheme.colorScheme.primary),
-            modifier = Modifier
-                .shadow(4.dp, shape = RoundedCornerShape(15.dp))
-                .padding(16.dp)
-
-        ) {
-            Icon(
-                Icons.Default.Favorite,
-                contentDescription = "Favoritos",
-                modifier = Modifier.size(25.dp)
-            )
-            Text(text = "Favoritos")
-
-        }
-
-
-    }
-
-    @Composable
-    fun MyTextButton() {
-        TextButton(
-            onClick = { },
-            colors = ButtonDefaults.buttonColors(
-                containerColor = MaterialTheme.colorScheme.primary
-
-
-            )
-        ) {
-            Text(text = "Texto Boton")
-        }
-
-
-    }
-
-    @Composable
-    fun MyImage() {
-        Image(
-            painter = painterResource(id = R.drawable.mi_imagen),
-            contentDescription = "Mi imagen",
-            modifier = Modifier
-                .size(200.dp)
-                .padding(16.dp)
-                .clip(CircleShape)
-                .border(2.dp, Color.Red, CircleShape),
-            contentScale = ContentScale.Crop,
-
-            alignment = Alignment.BottomEnd,
-        )
-
-    }
-
-    @Composable
-    fun MyIcon() {
-        Icon(
-            imageVector = Icons.Default.Person,
-            contentDescription = "Icono",
-
-            modifier = Modifier.size(50.dp),
-            tint = MaterialTheme.colorScheme.primary
-        )
-
-    }
 }
+
