@@ -7,7 +7,6 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxSize
@@ -41,6 +40,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import coil.compose.AsyncImage
 import com.example.cursodejetpackcompose.ui.theme.CursoDeJetpackComposeTheme
 
 
@@ -52,8 +52,37 @@ class MainActivity : ComponentActivity() {
             CursoDeJetpackComposeTheme {
                 //MyConstraintLayout()
                 //MyLazyColumn()
-                MyLazyRow()
+                //MyLazyRowImagenes()
+                MyLazyRowImagenesWeb()
             }
+        }
+    }
+
+    @Composable
+    fun MyLazyRowImagenesWeb(){
+
+        val imagenesUrl=listOf(
+            "https://cdn.pixabay.com/photo/2025/04/30/13/05/cat-9569386_1280.jpg",
+            "https://cdn.pixabay.com/photo/2020/05/01/08/33/building-5115897_1280.jpg",
+            "https://cdn.pixabay.com/photo/2025/07/20/13/12/little-red-riding-hood-9724469_1280.jpg"
+        )
+        LazyRow(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            horizontalArrangement = Arrangement.spacedBy(16.dp)
+        ){
+         items(imagenesUrl){imagenUrl->
+             AsyncImage(
+                 model = imagenUrl,
+                 contentDescription = "Mi imagen de la Url",
+                 modifier=Modifier
+                     .size(180.dp)
+                     .clip(RoundedCornerShape(15.dp)),
+                 contentScale = ContentScale.Crop
+             )
+
+         }
         }
     }
 
@@ -71,31 +100,49 @@ class MainActivity : ComponentActivity() {
             R.drawable.zorro,
 
             )
-    }
-
-
-    //@Composable
-    fun MyLazyRow() {
-        val Elementos = listOf("Elemento 1", "Elemento 2", "Elemento 3", "Elemento 4")
         LazyRow(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp),
             horizontalArrangement = Arrangement.spacedBy(16.dp)
-
-        ) {
-
-            items(Elementos) { elementos ->
-                Text(
-                    text = elementos,
+        ){
+            items(listImage){image ->
+                Image(
+                    painter = painterResource(id = image),
+                    contentDescription = "Mi imagen animal",
                     modifier = Modifier
-                        .padding(10.dp)
-                        .background(MaterialTheme.colorScheme.primary)
-                        .padding(16.dp),
-                    color = Color.White,
-                    fontSize = 20.sp,
-                    style = MaterialTheme.typography.bodyMedium
+                        .size(100.dp)
+                        //.clip(CircleShape))
+                        .clip(RoundedCornerShape(15.dp)),
+                    contentScale = ContentScale.Crop
                 )
+
+
+    }
+
+
+    //@Composable
+    //fun MyLazyRow() {
+      //  val Elementos = listOf("Elemento 1", "Elemento 2", "Elemento 3", "Elemento 4")
+        //LazyRow(
+          //  modifier = Modifier
+            //    .fillMaxWidth()
+              //  .padding(16.dp),
+            //horizontalArrangement = Arrangement.spacedBy(16.dp)
+
+        //) {
+
+          //  items(Elementos) { elementos ->
+            //    Text(
+              //      text = elementos,
+                //    modifier = Modifier
+                  //      .padding(10.dp)
+                    //    .background(MaterialTheme.colorScheme.primary)
+                      //  .padding(16.dp),
+                    //color = Color.White,
+                    //fontSize = 20.sp,
+                    //style = MaterialTheme.typography.bodyMedium
+               // )
 
 
 
@@ -274,5 +321,5 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
-}
+
 
