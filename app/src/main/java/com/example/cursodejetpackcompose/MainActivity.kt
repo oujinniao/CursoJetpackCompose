@@ -64,16 +64,28 @@ val elementos = List(100){"Elemento No $it"}
 
 
     ){
+        item {
+            Text(
+            text="Encabezado de la lista",
+                color=MaterialTheme.colorScheme.primary,
+                fontSize=20.sp
+            )
+        }
+
+
         items(elementos){
             item ->
             Text(text = item,
                 fontSize=20.sp)
-            Text(text = item,
-                fontSize=20.sp)
-            Text(text = item,
-                fontSize=20.sp)
-            Text(text = item,
-                fontSize=20.sp)
+
+        }
+
+        item {
+            Text(
+                text = "Pie de la lista",
+                color = MaterialTheme.colorScheme.primary,
+                fontSize = 20.sp
+            )
         }
     }
 
