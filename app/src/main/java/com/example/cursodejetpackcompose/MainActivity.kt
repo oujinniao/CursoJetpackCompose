@@ -43,9 +43,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.focus.FocusRequester.Companion.createRefs
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.modifier.modifierLocalMapOf
+
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -53,7 +55,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.text.font.FontFamily
+
 import com.example.cursodejetpackcompose.ui.theme.CursoDeJetpackComposeTheme
+import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.constraintlayout.compose.Dimension
+
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -61,164 +67,141 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             CursoDeJetpackComposeTheme {
-                Componentes()
+                MyConstraintLayout()
             }
         }
     }
 
 
     @Composable
-    fun Componentes() {
-     Box(
-         modifier=Modifier
-             .fillMaxSize()
+    fun MyConstraintLayout() {
 
+        ConstraintLayout(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(20.dp)
+        ) {
+            val (image, name, description, button) = createRefs()
 
-     ){
-         Image(
-             painter= painterResource(id = R.drawable.imagen_fondo),
-             contentDescription = "Imagen de fondo",
-             contentScale = ContentScale.Crop,
-             modifier = Modifier.fillMaxSize()
+            Image(
+                painter = painterResource(id = R.drawable.perfil),
+                contentDescription = "Mi perfil de imagen",
+                modifier = Modifier
+                    .size(100.dp)
+                    .padding(16.dp)
 
-         )
-         Text(text="Imagen de jet pack compose ",
-             style = TextStyle(
-                 color=Color.Red,
-                 fontSize = 30.sp,
-             ),
-             modifier = Modifier.align(Alignment.Center)
-         )
-         Button(
-             onClick = { /*TODO*/ },
-             modifier = Modifier
-                 .align(Alignment.BottomCenter)
-             .padding(50.dp),
-             shape = RoundedCornerShape(15.dp),
-             colors = ButtonDefaults.buttonColors(
-                 containerColor = MaterialTheme.colorScheme.primary,
-                 contentColor = MaterialTheme.colorScheme.onPrimary
-             )
+                    .constrainAs(image) {
+                        top.linkTo(parent.top)
+                        start.linkTo(parent.start)
 
-         ){
-             Text(text="presione")
+                    },
+                contentScale = ContentScale.Crop,
 
-         }
+                )
+            Text(
+                text = "Mi nombre es",
+                modifier = Modifier
+                    .constrainAs(name) {
+                    top.linkTo(image.top)
+                    start.linkTo(image.end, margin = 16.dp)
+                }
+            )
+            Text(
+                text = "Mi descripcion",
+                style = MaterialTheme.typography.bodyMedium,
+                     modifier = Modifier
+                    .constrainAs(description) {
+                    top.linkTo(name.bottom, margin = 4.dp)
+                    start.linkTo(name.start)
+                        end.linkTo(parent.end)
+                        width = Dimension.fillToConstraints
 
-     }
-
-
-
-
+                }
+            )
+            Button(
+                onClick = { },
+                modifier = Modifier
+                    .constrainAs(button) {
+                    top.linkTo(description.bottom, margin = 16.dp)
+                    start.linkTo(parent.start)
+                        end.linkTo(parent.end)
+                }
+            ) {
+                Text(text = "Mi boton")
+            }
         }
     }
 
 
+    @Composable
+    fun MyOutlinedButton() {
+        OutlinedButton(
+            onClick = { },
+            colors = ButtonDefaults.buttonColors(
+                containerColor = MaterialTheme.colorScheme.background,
+                contentColor = MaterialTheme.colorScheme.onPrimary
+            ),
+            shape = RoundedCornerShape(15.dp),
+            border = BorderStroke(2.dp, MaterialTheme.colorScheme.primary),
+            modifier = Modifier
+                .shadow(4.dp, shape = RoundedCornerShape(15.dp))
+                .padding(16.dp)
 
+        ) {
+            Icon(
+                Icons.Default.Favorite,
+                contentDescription = "Favoritos",
+                modifier = Modifier.size(25.dp)
+            )
+            Text(text = "Favoritos")
 
+        }
 
-
-
-
-
-
-
-
-
-
-           // CircularProgressIndicator(
-             //   modifier = Modifier.size(100.dp),
-               // color = MaterialTheme.colorScheme.primary,
-                //strokeWidth = 15.dp,
-                //trackColor = Color.Green,
-
-            //)
-            //Spacer(modifier = Modifier.height(56.dp))
-            //LinearProgressIndicator(
-              //  modifier=Modifier.fillMaxWidth(),
-                //color=MaterialTheme.colorScheme.primary,
-                //trackColor=Color.Cyan,
-                //)
-
-            //Spacer(modifier = Modifier.height(16.dp))
-            //CircularProgressIndicator(
-              //  modifier = Modifier.size(100.dp),
-                //color = MaterialTheme.colorScheme.secondary,
-                //strokeWidth = 30.dp,
-                //trackColor = Color.Gray,
-            //)
-
-
-
-
-
-
-@Composable
-fun MyOutlinedButton(){
-    OutlinedButton(
-        onClick = { },
-              colors = ButtonDefaults.buttonColors(
-            containerColor = MaterialTheme.colorScheme.background,
-            contentColor = MaterialTheme.colorScheme.onPrimary),
-        shape=RoundedCornerShape(15.dp),
-        border= BorderStroke(2.dp, MaterialTheme.colorScheme.primary),
-        modifier = Modifier
-            .shadow(4.dp, shape=RoundedCornerShape(15.dp))
-            .padding(16.dp)
-
-        ){
-        Icon(Icons.Default.Favorite,
-            contentDescription = "Favoritos",
-            modifier =Modifier.size(25.dp))
-        Text(text="Favoritos")
 
     }
 
-
-}
-
-@Composable
-fun MyTextButton(){
-    TextButton(
-        onClick = {  },
-        colors = ButtonDefaults.buttonColors(
-            containerColor = MaterialTheme.colorScheme.primary
+    @Composable
+    fun MyTextButton() {
+        TextButton(
+            onClick = { },
+            colors = ButtonDefaults.buttonColors(
+                containerColor = MaterialTheme.colorScheme.primary
 
 
+            )
+        ) {
+            Text(text = "Texto Boton")
+        }
 
-    )
-    ){
-        Text(text="Texto Boton")
+
     }
 
-
-}
-
-@Composable
-    fun MyImage(){
-    Image(
-        painter= painterResource(id=R.drawable.mi_imagen),
-        contentDescription="Mi imagen",
-        modifier=Modifier
-            .size(200.dp)
-            .padding(16.dp)
-            .clip(CircleShape)
-            .border(2.dp, Color.Red, CircleShape),
+    @Composable
+    fun MyImage() {
+        Image(
+            painter = painterResource(id = R.drawable.mi_imagen),
+            contentDescription = "Mi imagen",
+            modifier = Modifier
+                .size(200.dp)
+                .padding(16.dp)
+                .clip(CircleShape)
+                .border(2.dp, Color.Red, CircleShape),
             contentScale = ContentScale.Crop,
 
             alignment = Alignment.BottomEnd,
-                )
+        )
 
-}
+    }
 
-@Composable
-fun MyIcon(){
-    Icon(
-        imageVector = Icons.Default.Person,
-        contentDescription = "Icono",
+    @Composable
+    fun MyIcon() {
+        Icon(
+            imageVector = Icons.Default.Person,
+            contentDescription = "Icono",
 
-        modifier = Modifier.size(50.dp),
-        tint=MaterialTheme.colorScheme.primary
-    )
+            modifier = Modifier.size(50.dp),
+            tint = MaterialTheme.colorScheme.primary
+        )
 
+    }
 }
