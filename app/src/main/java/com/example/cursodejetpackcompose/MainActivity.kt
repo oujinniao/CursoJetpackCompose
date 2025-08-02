@@ -37,6 +37,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
@@ -73,10 +74,48 @@ class MainActivity : ComponentActivity() {
                 //MyLazyVerticalGrid()
                 //GaleriaDeFotos()
                 //MyLazyHorizontalGrid()
-                Mycard()
+                //Mycard()
+                MyElevatedCard()
+
             }
         }
     }
+
+    @Composable
+    fun MyElevatedCard() {
+        ElevatedCard(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(15.dp),
+            elevation = CardDefaults.cardElevation(14.dp),
+            shape = RoundedCornerShape(15.dp),
+        )
+        {
+            Column(
+                modifier=Modifier
+                    .padding(16.dp)
+
+            ) {
+                Text(
+                    text="Titulo de la tarjeta",
+                    style= MaterialTheme.typography.titleMedium)
+                Spacer(modifier=Modifier.height(8.dp))
+
+                Text(
+                    text="Ejemplo de ElevatedCard",
+                    style=MaterialTheme.typography.bodyMedium
+                )
+            }
+
+        }
+
+
+    }
+
+
+
+
+
 
     @Composable
     fun Mycard(){
