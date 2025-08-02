@@ -7,21 +7,15 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Switch
-import androidx.compose.material3.SwitchDefaults
+import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -38,80 +32,33 @@ class MainActivity : ComponentActivity() {
                 //RememberSaveableExample()
                 //rememberMutableStateOfExample()
                 //MyScreen()
-                MyScreen2()
+                //MyScreen2()
+                CounterScreen()
 
             }
         }
     }
 }
-
 @Composable
-fun MyScreen2(){
-    var isChecked by rememberSaveable { mutableStateOf(false) }
+fun CounterScreen() {
+
+    var counter = remember { mutableIntStateOf(0) }
+    val esPar by remember { derivedStateOf { counter.value % 2 == 0 } }
 
     Column(
-        modifier= Modifier
+        modifier = Modifier
             .fillMaxSize()
             .padding(16.dp),
-        verticalArrangement= Arrangement.Center,
+        verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        Text(text = "Contador: ${counter.value}")
+        Text(text = if (esPar) "Es par" else "Es impar")
 
-        Text(text = "Checkbox: ${if(isChecked) "Activado" else "Desactivado"}")
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        MySwitch(
-            checked = isChecked,
-            onCheckedChange = { isChecked = it }
-
-        )//actualiza el estado
+        Button(
+            onClick = { counter.value++ }
+        ) {
+            Text(text = "Incrementar")
+        }
     }
-
-    }
-    @Composable
-    fun MySwitch(checked: Boolean, onCheckedChange: (Boolean) -> Unit) {
-        Switch(
-            checked = checked,
-            onCheckedChange = onCheckedChange,
-            colors = SwitchDefaults.colors(
-                checkedThumbColor = MaterialTheme.colorScheme.primary,//Activado
-
-                uncheckedThumbColor = MaterialTheme.colorScheme.onSurface//Desactivado
-            )
-        )
-
-    }
-
-
-
-
-//este componente es el padre y text guardara el estado
-@Composable
-fun MyScreen (){
-    var text by rememberSaveable { mutableStateOf("") }
-
-    Column(
-        modifier= Modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        verticalArrangement= Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ){
-        //Hijo
-        MyOutlinedTextField(text = text, onTextChange = {text = it})
-
-    }
-
-}
-@Composable
-fun MyOutlinedTextField(text: String, onTextChange: (String) -> Unit){
-
-    OutlinedTextField(
-        value = text,
-        onValueChange = onTextChange,
-        label = { Text(text = "Label") },
-        modifier=Modifier.fillMaxWidth()
-    )
-
 }
