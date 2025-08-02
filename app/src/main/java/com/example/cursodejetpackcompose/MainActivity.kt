@@ -35,6 +35,8 @@ import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
@@ -70,10 +72,79 @@ class MainActivity : ComponentActivity() {
                 //MyLazyRowImagenesWeb()
                 //MyLazyVerticalGrid()
                 //GaleriaDeFotos()
-                MyLazyHorizontalGrid()
+                //MyLazyHorizontalGrid()
+                Mycard()
             }
         }
     }
+
+    @Composable
+    fun Mycard(){
+        Card(
+            modifier= Modifier
+                .fillMaxWidth()
+                .padding(15.dp),
+            elevation = CardDefaults.cardElevation(4.dp),
+            shape = RoundedCornerShape(15.dp),
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.surfaceVariant),
+        ) {
+
+            Column (
+                modifier= Modifier
+                    .padding(16.dp)
+
+            ){
+                Image(
+                    painter = painterResource(id = R.drawable.mi_imagen),
+                    contentDescription = "Mi imagen",
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(200.dp)
+                        .clip(RoundedCornerShape(15.dp)),
+
+                    contentScale = ContentScale.Crop
+                )
+                Spacer(modifier = Modifier.height(4.dp))
+
+                Text(
+                    text = "Mi imagen",
+                    style = MaterialTheme.typography.titleMedium,
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold
+                )
+            Spacer(modifier = Modifier.height(4.dp))
+
+                Text(
+                    text = "Mi descripcion",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Normal
+                )
+                 Button(
+                    onClick = {  },
+                    modifier = Modifier.align(Alignment.End),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.primary,
+                        contentColor = MaterialTheme.colorScheme.onPrimary
+                    )
+
+
+                    ){
+                        Text(text = "Ver mas")
+
+                    }
+            }
+        }
+    }
+}
+
+
+
+
+
+
 
 
     @Composable
@@ -480,6 +551,6 @@ fun GridItem(element: String) {
                 }
             }
         }
-    }
+
 
 
