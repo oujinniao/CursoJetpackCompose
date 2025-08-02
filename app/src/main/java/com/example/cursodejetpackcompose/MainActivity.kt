@@ -41,6 +41,7 @@ import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -75,11 +76,60 @@ class MainActivity : ComponentActivity() {
                 //GaleriaDeFotos()
                 //MyLazyHorizontalGrid()
                 //Mycard()
-                MyElevatedCard()
+                //MyElevatedCard()
+                MyOutlinedCard()
+
+
 
             }
         }
     }
+
+    @Composable
+    fun MyOutlinedCard() {
+        OutlinedCard(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(15.dp),
+            elevation = CardDefaults.cardElevation(14.dp),
+            shape = RoundedCornerShape(15.dp),
+            border = BorderStroke(2.dp, MaterialTheme.colorScheme.primary),
+        )
+        {
+            Column(
+                modifier= Modifier
+                    .fillMaxWidth()
+                    .padding(15.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+
+            ) {
+
+                Text(text="Titulo de la tarjeta",
+                    style= MaterialTheme.typography.titleMedium,
+                color=MaterialTheme.colorScheme.primary)
+
+                Spacer(modifier=Modifier.height(8.dp))
+                Text(
+                    text="esta tarjeta tiene mas info de la funcion",
+                    style=MaterialTheme.typography.bodyMedium
+                )
+                Spacer(modifier=Modifier.height(8.dp))
+
+                Button(
+                    onClick={},
+                    modifier=Modifier.align(Alignment.End)
+                    ){
+                    Text(text="Ver mas")
+
+                }
+                }
+
+
+
+        }
+    }
+
 
     @Composable
     fun MyElevatedCard() {
