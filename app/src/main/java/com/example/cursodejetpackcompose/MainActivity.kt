@@ -59,6 +59,7 @@ class MainActivity : ComponentActivity() {
             }
             }
         }
-
+//DisposableEffect tiene dos parámetros: key1 y effect.
+//y su funcion principal es borrar los efectos al salir de la pantalla
 
 
