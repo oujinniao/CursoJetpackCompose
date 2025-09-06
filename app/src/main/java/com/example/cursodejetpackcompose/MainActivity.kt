@@ -1,8 +1,6 @@
 package com.example.cursodejetpackcompose
 
-
 import android.os.Bundle
-import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -10,18 +8,12 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberUpdatedState
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.State
+import androidx.compose.runtime.produceState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.example.cursodejetpackcompose.ui.theme.CursoDeJetpackComposeTheme
 import kotlinx.coroutines.delay
@@ -33,21 +25,19 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             CursoDeJetpackComposeTheme {
-
-                rememberUpdateState()
-
+                ProduceStateExample()
             }
         }
-
     }
 
     @Composable
-    fun rememberUpdateState() {
-        var message by remember { mutableStateOf(" Saludos desde JDC") }
+    fun ProduceStateExample(){
 
-        val context = LocalContext.current
-        val currentMessage by rememberUpdatedState(newValue = message)
 
+        val datos: State<String> = produceState(initialValue = "Cargando..."){
+            delay(5000)
+            value = "Datos cargados, éxito"
+        }
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -55,30 +45,27 @@ class MainActivity : ComponentActivity() {
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Button(
-                onClick = {
-                    message = "Mensaje actualizado"
-                },
-                modifier = Modifier.padding(6.dp)
-            ) {
-                Text(text = "Mostrar mensaje actualizado")
-            }
-                LaunchedEffect(Unit) {
-                    delay(5000)
-                    Toast.makeText(context, currentMessage, Toast.LENGTH_SHORT).show()
-                }
-            }
+            Text(
+                text = datos.value)
         }
     }
+}
 
 
 
 
 
-//rememberUpdateSate es una funcion que se encarga de actualizar el estado de una variable
-//se usa para actualizar el estado de una variable que se usa en una funcion componible
-//como LaunchedEffect, SideEffect, DisposableEffect y produceState.
-//LocalContex.current es una variable que se usa para obtener el contexto de la aplicacion
+
+//la funcion produceState es una funcion de alto nivel que nos permite crear un estado
+//que se actualizan de forma asíncrona a medida que cambian los valores
+//de la fuente de datos.
+//produceState recibe dos parámetros:
+//initialValue: T, que es el valor inicial del estado.
+//producer: suspend () -> T, que es una función suspendida que devuelve un valor de tipo T.
+//Esta función se ejecuta en un hilo separado y actualiza el estado con el valor devuelto.
+//La función produceState devuelve un State<T> que contiene el valor actual del estado.
+//El estado se actualiza automáticamente cuando el valor devuelto por la función producer cambia.
+//UNA VEZ QUE EL COMPOSABLE QUE LA USA SALE DE LA PANTALLA, LA CORRUTINA INTERNA SE CANCELA AUTOMÁTICAMENTE
 
 
 
