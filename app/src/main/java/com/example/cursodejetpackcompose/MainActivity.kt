@@ -9,18 +9,24 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.State
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.produceState
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.cursodejetpackcompose.ui.theme.CursoDeJetpackComposeTheme
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
-import java.net.HttpURLConnection
-import java.net.URL
+import kotlinx.coroutines.delay
 
 
 data class Todo(
@@ -36,40 +42,32 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             CursoDeJetpackComposeTheme {
-                ProduceStateApiCallExample()
+                FrasesRandom()
             }
         }
     }
 }
 
 
+
+
 @Composable
-fun ProduceStateApiCallExample() {
+fun FrasesRandom() {
+    var refreshTrigger by remember { mutableIntStateOf(0) }
+    val frases by produceState<String?>(
+        initialValue = null,
+        key1 = refreshTrigger
+        ){
 
-    val todoState: State<Todo?> = produceState<Todo?>(initialValue = null) {
+        delay(1000)
 
-        withContext(Dispatchers.IO) {
-            try {
-
-                val url = URL("https://jsonplaceholder.typicode.com/todos/1")
-                val connection = url.openConnection() as HttpURLConnection
-                connection.requestMethod = "GET"
-                val reader = connection.inputStream.bufferedReader()
-                val jsonResponse = reader.readText()
-
-
-                val title = jsonResponse.split("\"title\": \"")[1].split("\",")[0]
-                val completedString = jsonResponse.split("\"completed\": ")[1].split("}")[0]
-                val completed = completedString.toBoolean()
-
-
-                value = Todo(userId = 1, id = 1, title = title, completed = completed)
-
-            } catch (e: Exception) {
-
-                e.printStackTrace()
-            }
-        }
+        value = listOf(
+            "El éxito no es la clave de la felicidad. La felicidad es la clave del éxito. Si amas lo que haces, tendrás éxito.",
+            "El único modo de hacer un gran trabajo es amar lo que haces.",
+            "La única forma de hacer un gran trabajo es amar lo que haces.",
+            "El éxito es la suma de pequeños esfuerzos repetidos día tras día.",
+            "No hay caminos para la paz; la paz es el camino"
+        ).random()
     }
 
     Column(
@@ -79,18 +77,47 @@ fun ProduceStateApiCallExample() {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-
-        todoState.value?.let { todo ->
-            Text(text = "Título de la tarea:")
-            Text(text = todo.title)
-            Text(text = "Completada: ${if (todo.completed) "Sí" else "No"}")
-        } ?: run {
-
+        if (frases == null) {
             CircularProgressIndicator()
-            Text(text = "Cargando datos...")
+        } else {
+            Text(
+                text = frases!!,
+                style = MaterialTheme.typography.bodyLarge,
+                color = MaterialTheme.colorScheme.primary,
+                textAlign = TextAlign.Center,
+                fontWeight = FontWeight.Bold,
+                fontSize = 20.sp,
+                lineHeight = 30.sp,
+                letterSpacing = 1.sp,
+                modifier = Modifier.padding(16.dp),
+                fontFamily = FontFamily.SansSerif
+            )
+
+        }
+            OutlinedButton(
+                onClick = {
+                    refreshTrigger++
+                },
+                modifier = Modifier.padding(top=32.dp)
+            ) {
+                Text(
+                    text = "Pulsa para ver otra frase",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.primary,
+                    textAlign = TextAlign.Center,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 20.sp,
+                    lineHeight = 30.sp,
+                    letterSpacing = 1.sp,
+                    modifier = Modifier.padding(16.dp),
+                    fontFamily = FontFamily.SansSerif
+                )
+
+            }
         }
     }
-}
+
+
 
 
 
