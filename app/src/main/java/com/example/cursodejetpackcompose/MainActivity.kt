@@ -1,26 +1,30 @@
 package com.example.cursodejetpackcompose
 
+import MiTextoReciclado
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Warning
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.snapshotFlow
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.example.cursodejetpackcompose.ui.theme.CursoDeJetpackComposeTheme
 
@@ -38,60 +42,69 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             CursoDeJetpackComposeTheme {
-            SnapshotFlowExample()
+                TextFieldExample()
+
             }
         }
     }
-
     @Composable
+    fun TextFieldExample(){
 
-    fun SnapshotFlowExample(){
-        val textState = remember { mutableStateOf("") }
-        val showAlert= remember { mutableStateOf(false) }
+        var text by remember { mutableStateOf("") }
+        var isError =text.length>=10
 
-        LaunchedEffect(Unit){
-            snapshotFlow { textState.value }
-                .collect{text->
-
-                    showAlert.value=text.contains("Valparaiso"
-                    ,ignoreCase = true)
-
-
-        }
-    }
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(16.dp),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ){
-            OutlinedTextField(
-                value = textState.value,
-                onValueChange = { textState.value = it },
-                label = { Text("Ingrese su ciudad") },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
-                singleLine = true
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+       ){
+            TextField(
+                value = text,
+                onValueChange = {
+                    text = it},
+                label = { MiTextoReciclado(text = "Nombre") },
+                 placeholder = { Text(text = "Escribe tu nombre") },
+                leadingIcon = {
+                    Icon(Icons.Default.Warning,
+                        contentDescription = "Error",
+                        tint = MaterialTheme.colorScheme.primary)
 
+                },
+                trailingIcon = {
+                    if(isError){
+                        Icon(Icons.Default.Warning
+                            , contentDescription = "Error",
+                            tint = MaterialTheme.colorScheme.error)
+                    }
+                    },
+
+                isError = isError,
+                singleLine = true,
+                maxLines = 1,
+                minLines = 1,
+                readOnly = false,
+                enabled = true,
+                keyboardOptions = KeyboardOptions(
+
+                    autoCorrect = true,
+                    keyboardType = KeyboardType.Text,
+                    imeAction = androidx.compose.ui.text.input.ImeAction.Done,
+                    capitalization = androidx.compose.ui.text.input.KeyboardCapitalization.Words),
+                modifier = Modifier.fillMaxWidth(),
             )
-            if (showAlert.value){
-                Spacer(modifier = Modifier.height(16.dp))
-
+            if(isError){
                 Text(
-                    text = "Ciudad encontrada",
-                color=MaterialTheme.colorScheme.primary,
-                style=MaterialTheme.typography.titleLarge)
-
-
-
-            }else{
-                Text("Ciudad no encontrada")
+                text = "El nombre no puede tener mas de 10 caracteres",
+                    color = MaterialTheme.colorScheme.error,
+                    style = MaterialTheme.typography.bodySmall,
+                    modifier = Modifier.padding(start = 16.dp, top= 5.dp),)
             }
-        }
+
 
         }
+    }
 
 }
 
