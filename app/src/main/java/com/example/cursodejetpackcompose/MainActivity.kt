@@ -12,19 +12,15 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.Checkbox
-import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.RadioButton
+import androidx.compose.material3.RadioButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -36,14 +32,19 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             CursoDeJetpackComposeTheme {
-                PreferenceApp()
+                RadioButtonExample()
+
             }
         }
     }
 
     @Composable
-    fun CheckBoxExample() {
-        var checked by remember { mutableStateOf(false) }
+
+    fun RadioButtonExample() {
+
+        val options = listOf("Opción 1", "Opción 2", "Opción 3")
+
+        var selectedOption = remember { mutableStateOf(options[0]) }
 
         Column(
             modifier = Modifier
@@ -52,112 +53,55 @@ class MainActivity : ComponentActivity() {
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
 
-        ) {
-            Row(
+        ){
+            Text(
+                text = "Selecciona una opción:",
+                style = MaterialTheme.typography.bodyLarge,
+                modifier = Modifier.padding(bottom = 16.dp)
+
+            )
+            LazyColumn(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(8.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Center
             ) {
-                Checkbox(
-                    checked = checked,
-                    onCheckedChange = { checked = it },
-                    colors = CheckboxDefaults.colors(
-                        checkedColor = MaterialTheme.colorScheme.primary,
-                        uncheckedColor = MaterialTheme.colorScheme.onSurface,
-                        checkmarkColor = MaterialTheme.colorScheme.surface,
+                items(options){option ->
 
-                        )
-                )
-                Spacer(modifier = Modifier.padding(2.dp))
-
-                Text(
-                    text =
-                        if (checked) "Checkbox marcado"
-                        else "Checkbox no marcado"
-                )
-            }
-
-
-        }
-
-    }
-
-    @Composable
-    fun PreferenceApp() {
-        val options = listOf("Opción 1", "Opción 2", "Opción 3", "Opción 4", "Opción 5")
-
-        val stateOption = remember {
-            mutableStateMapOf<String, Boolean>().apply {
-                options.forEach {
-                    put(it, false)
-                }
-            }
-
-        }
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Text(
-                text = "Selecciona una opción",
-                style = MaterialTheme.typography.titleLarge,
-                modifier = Modifier.padding(bottom = 16.dp),
-
-                )
-
-            Spacer(modifier = Modifier.padding(16.dp))
-
-            LazyColumn {
-                items(options) { option ->
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(vertical = 8.dp),
                         verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Checkbox(
-                            checked = stateOption[option] ?: false,
-                            onCheckedChange = {
-                                stateOption[option] = it
-                            },
-                            colors = CheckboxDefaults.colors(
-                                checkedColor = MaterialTheme.colorScheme.primary,
-                                uncheckedColor = MaterialTheme.colorScheme.onSurface,
-                                checkmarkColor = MaterialTheme.colorScheme.surface
+
+                    )
+                    {
+
+                        RadioButton(
+                            selected = (option == selectedOption.value), // Corrección
+                            onClick = { selectedOption.value = option }, // Corrección
+                            colors = RadioButtonDefaults.colors(
+                                selectedColor = MaterialTheme.colorScheme.primary,
+                                unselectedColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
+                                disabledSelectedColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.38f),
+                                disabledUnselectedColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
                             )
                         )
-                        Spacer(modifier = Modifier.width(8.dp))
-
                         Text(
                             text = option,
                             style = MaterialTheme.typography.bodyLarge,
-                            modifier = Modifier.weight(1f)
-                        )
+                            modifier = Modifier.padding(start = 16.dp)
+                            )
                     }
 
+
                 }
-
             }
-            Spacer(modifier = Modifier.height(24.dp))
-
-            val selectedOptions = stateOption.filterValues { it }.keys
-            val selectedText = if (selectedOptions.isEmpty()) {
-                "Ninguna"
-            } else {
-                selectedOptions.joinToString(", ")
-            }
+            Spacer(modifier = Modifier.height(16.dp))
 
             Text(
-                text = "Opciones seleccionadas: $selectedText",
+                text = "Opción seleccionada: ${selectedOption.value}",
                 style = MaterialTheme.typography.bodyLarge,
-                modifier = Modifier.padding(bottom = 16.dp)
+                color = MaterialTheme.colorScheme.primary
             )
-
         }
     }
 }
