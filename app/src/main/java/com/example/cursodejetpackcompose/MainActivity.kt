@@ -4,22 +4,25 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Call
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material3.Button
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Switch
-import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -28,7 +31,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import com.example.cursodejetpackcompose.ui.theme.CursoDeJetpackComposeTheme
 
@@ -39,83 +43,94 @@ class MainActivity : ComponentActivity() {
         setContent {
             CursoDeJetpackComposeTheme {
 
-            SwitchExample()
+               DropDownMenuExample()
             }
         }
     }
 
     @Composable
-    fun SwitchExample(){
-        var wifiEnable by remember { mutableStateOf(false) }
+    fun DropDownMenuExample() {
+        var expanded by remember { mutableStateOf(false) }
+        var selectedOption by remember { mutableStateOf<Pair<String, ImageVector>?>(null) }
+        val options = listOf(
+            "Inicio" to Icons.Default.Home,
+            "Favoritos" to Icons.Default.Check,
+            "Cerrar Sesión" to Icons.Default.Close,
+            "Configuración" to Icons.Default.Settings,
+            "Acerca de" to Icons.Default.Check,
+            "Ayuda" to Icons.Default.Call
+        )
 
-        Column (
-            modifier=Modifier.fillMaxSize()
-            .padding(16.dp),
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(top = 100.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Box(
 
-            verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
+                modifier = Modifier.fillMaxWidth(),
+                contentAlignment = Alignment.Center,
 
-        ){
-            Row (
-                modifier= Modifier
-                    .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 12.dp),
-
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
-
-
-            ){
-                Column (
-                    modifier=Modifier.weight(1f)
-
-                ){
-                    Text(
-                        text="Wifi",
-                        style= MaterialTheme.typography.titleMedium,
-                    )
-        Spacer(modifier=Modifier.height(8.dp))
-                    Text(
-                        text= if (wifiEnable)"Conectado a la red" else "Desconectado de la red",
-                        style= MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-
-                    )
-                Switch(
-                    checked = wifiEnable,
-                    onCheckedChange = {wifiEnable=it},
-                    thumbContent = {
-                        if (wifiEnable){
+                ) {
+                Button(
+                    onClick = { expanded = true },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        selectedOption?.second?.let {
                             Icon(
-                                imageVector = Icons.Default.Check,
-                                contentDescription = "Activado",
-                               modifier = Modifier.size(SwitchDefaults.IconSize),
-                                tint = Color.Green
+                                imageVector = selectedOption!!.second,
+                                contentDescription = selectedOption!!.first,
+                                modifier = Modifier.size(24.dp)
+                            )
+                            Spacer(modifier = Modifier.width(8.dp))
 
-                            )
-                        }else{
-                            Icon(
-                                imageVector = Icons.Default.Close,
-                                contentDescription = "Desactivado",
-                                modifier = Modifier.size(SwitchDefaults.IconSize),
-                                tint = Color.Red.copy(alpha = 0.6f)
-                            )
                         }
-                        },
-                    colors = SwitchDefaults.colors(
-                        checkedThumbColor = MaterialTheme.colorScheme.primary,
-                        checkedTrackColor = Color.Green.copy(alpha = 0.6f),
-                        uncheckedThumbColor = MaterialTheme.colorScheme.surfaceVariant,
-                        uncheckedTrackColor = Color.Red.copy(alpha = 0.6f)
-                    )
-                )
+                        Text(
+                            selectedOption?.first ?: " selecciona una opcion"
+                        )
+
+                    }
 
                 }
+                DropdownMenu(
+                    expanded = expanded,
+                    onDismissRequest = { expanded = false },
+                    offset = DpOffset((-60).dp, 0.dp)
+                ) {
+                    options.forEach { (text, icon) ->
+                        DropdownMenuItem(
+                            text = {
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Icon(
+                                        imageVector = icon,
+                                        contentDescription = text,
+                                        modifier = Modifier.size(24.dp)
+                                    )
+                                    Spacer(modifier = Modifier.width(8.dp))
+                                    Text(text = text)
+                                }
+                            },
+                            onClick = {
+                                selectedOption = text to icon
+                                expanded = false
+                            }
+                        )
+                    }
+
+                }
+
             }
 
         }
-
-
     }
-
 }
+
+
+
+
