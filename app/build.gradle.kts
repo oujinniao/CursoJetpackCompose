@@ -58,7 +58,8 @@ dependencies {
 
     // ConstraintLayout
     implementation(libs.androidx.constraintlayout) // Views XML (opcional)
-    implementation(libs.androidx.constraintlayout.compose) // Jetpack Compose ✅
+    implementation(libs.androidx.constraintlayout.compose)
+    implementation(libs.material3) // Jetpack Compose ✅
 
     // Testing
     testImplementation(libs.junit)
