@@ -8,16 +8,15 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
-import androidx.compose.material3.DatePicker
-import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.material3.rememberDatePickerState
+import androidx.compose.material3.TimePicker
+import androidx.compose.material3.TimePickerDefaults
+import androidx.compose.material3.TimePickerLayoutType
+import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -27,9 +26,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.cursodejetpackcompose.ui.theme.CursoDeJetpackComposeTheme
-import java.time.LocalDate
-import java.time.ZoneId
-import java.time.format.DateTimeFormatter
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,118 +33,61 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             CursoDeJetpackComposeTheme {
-                DatePickerDialogExample()
-
+                TimePickerExample()
             }
         }
     }
-
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
-    fun DatePickerDialogExample() {
-        val zoneId = ZoneId.systemDefault()
-        val currentDate = LocalDate.now(zoneId)
-        val startOfDayMillis = currentDate
-            .atStartOfDay(zoneId)
-            .toInstant()
-            .toEpochMilli()
-
-        val datePickerState = rememberDatePickerState(initialSelectedDateMillis = startOfDayMillis)
-        var selectedDateText by remember { mutableStateOf("") }
-
-        var showDialog by remember { mutableStateOf(false) }
+    fun TimePickerExample() {
+        val timePickerState = rememberTimePickerState(
+            initialHour = 12,
+            initialMinute = 10,
+            is24Hour = false
+        )
+        var selectedTimeText by remember { mutableStateOf("") }
 
         Column(
             modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
+                .padding(16.dp)
+                .fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
         ) {
+            Text(
+                text = if (selectedTimeText.isNotEmpty()) {
+                    "La hora seleccionada es: $selectedTimeText"
+                } else {
+                    "Seleccione una hora"
+                }
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+
+            TimePicker(
+                state = timePickerState,
+                layoutType = TimePickerLayoutType.Vertical,
+                colors = TimePickerDefaults.colors() // Esta es la línea que soluciona el problema
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+
             Button(
-                onClick = { showDialog = true }
-            ) {
-                Text("Selecciona una fecha")
+                onClick = {
+                    val hour24 = timePickerState.hour
+                    val minute = timePickerState.minute
 
-            }
-            Spacer(modifier = Modifier.padding(16.dp))
-
-            if (selectedDateText.isNotEmpty()) {
-                Text(
-                    "Fecha seleccionada: $selectedDateText",
-                    style = MaterialTheme.typography.bodyLarge
-                )
-            }
-
-            if (showDialog) {
-                DatePickerDialog(
-                    onDismissRequest = { showDialog = false },
-                    confirmButton = {
-                        TextButton(
-                            onClick = {
-                                val selectedDateMillis = datePickerState.selectedDateMillis
-                                if (selectedDateMillis != null) {
-                                    val daysSinceEpoch = selectedDateMillis / (24 * 60 * 60 * 1000)
-                                    val localDate = LocalDate.ofEpochDay(daysSinceEpoch)
-                                    val dateString =
-                                        localDate.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))
-                                    selectedDateText = dateString
-                                }
-                                showDialog = false
-
-                            }
-                        ) {
-                            Text("Confirmar")
-                        }
-                    },
-                    dismissButton = {
-                        TextButton(
-                            onClick = {
-                                showDialog = false
-                            }
-                        ) {
-                            Text("Cancelar")
-                        }
+                    val amPm = if (timePickerState.hour < 12) "AM" else "PM"
+                    val hour12 = when {
+                        timePickerState.hour == 0 -> 12
+                        timePickerState.hour < 13 -> timePickerState.hour
+                        else -> timePickerState.hour - 12
                     }
 
-                ) {
-                    DatePicker(
-                        state = datePickerState,
-                        showModeToggle = true,
-                        modifier = Modifier.fillMaxWidth()
-                            .padding(8.dp),
-                        title = {
-                            Text(
-                                text = "Titulo de DatePicker",
-                                style = MaterialTheme.typography.headlineSmall,
-                                modifier = Modifier.padding(8.dp)
-                            )
-                        },
-                        headline = {
-                            Text(
-                                text = "Selecciona una fecha",
-                                style = MaterialTheme.typography.bodyLarge
-                            )
-                        }
-
-                    )
+                    selectedTimeText = String.format("%02d:%02d %s", hour12, minute, amPm)
                 }
+            ) {
+                Text(text = "Seleccionar hora o confirmar")
             }
-
         }
-
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
