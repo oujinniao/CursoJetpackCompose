@@ -10,16 +10,16 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.AlertDialog
+import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material3.Button
-import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.material3.TimePicker
-import androidx.compose.material3.TimePickerDefaults
-import androidx.compose.material3.TimePickerLayoutType
-import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -28,7 +28,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.cursodejetpackcompose.ui.theme.CursoDeJetpackComposeTheme
-import java.util.Locale
+import kotlinx.coroutines.delay
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,93 +36,85 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             CursoDeJetpackComposeTheme {
-                TimePickerWithDialog()
+                IndeterminateCircularProgressIndicator()
             }
         }
     }
 
-    @OptIn(ExperimentalMaterial3Api::class)
     @Composable
-    fun TimePickerWithDialog() {
-        val timePickerState = rememberTimePickerState(
-            initialHour = 12,
-            initialMinute = 10,
-            is24Hour = false
-        )
-        var showDialog by remember { mutableStateOf(false) }
-        var selectedTimeText by remember { mutableStateOf("") }
+    fun IndeterminateCircularProgressIndicator() {
+        var isLoading by remember { mutableStateOf(false) }
+        var startOperation by remember { mutableStateOf(false) }
 
+        LaunchedEffect(startOperation) {
+            if (startOperation) {
+                simulateSlowProcess(
+                    onStar = { isLoading = true },
+                    onFinish = {
+                        isLoading = false
+                        startOperation = false
+                    }
+                )
+            }
+        }
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(24.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        ) {
-            Text(
-                text = if (selectedTimeText.isEmpty()) "Seleccionar una hora"
-                else "Hora seleccionada: $selectedTimeText"
-            )
-            Spacer(modifier = Modifier.height(16.dp))
+            .padding(24.dp),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ){
+            if (isLoading) { //si loading es true, ejecutamos este bloque de codigos
+                CircularProgressIndicator(
+                    modifier = Modifier.size(64.dp),
+                    color = MaterialTheme.colorScheme.primary
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+                Text(
+                    text = "Procesando operación...",
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.primary
+                )
 
-            Button(onClick = { showDialog = true }) {
-                Text(text = "Abrir TimePickerDialog")
+            } else { //si loading es false, ejecutamos este bloque de codigos
+
+
+                Icon(
+                    imageVector = Icons.Filled.CheckCircle,
+                    contentDescription = "OPERACION EXITOSA",
+                    modifier = Modifier.size(64.dp),
+                    tint = MaterialTheme.colorScheme.primary
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Text(
+                    text = "Operacion COMPLETADA",
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.primary
+                )
             }
-        }
-
-        if (showDialog) {
-            AlertDialog(
-                onDismissRequest = {
-                    showDialog = false
-                },
-                title = {
-                    Text(text = "Selecciona una hora")
-                },
-                confirmButton = {
-                    TextButton(onClick = {
-                        val hour = timePickerState.hour
-                        val minute = timePickerState.minute
-                        val amPm = if (hour < 12) "AM" else "PM"
-                        val hour12 = when {
-                            hour == 0 -> 12
-                            hour > 12 -> hour - 12
-                            else -> hour
-                        }
-                        selectedTimeText = String.format(
-                            Locale.getDefault(),
-                            "%02d:%02d %s", hour12, minute, amPm
-                        )
-                        showDialog = false
-                    }) {
-                        Text(text = "Aceptar")
-                    }
-                },
-                dismissButton = {
-                    TextButton(onClick = {
-                        showDialog = false
-                    }) {
-                        Text(text = "Cancelar")
-                    }
-                },
-                text = {
-                    TimePicker(
-                        state = timePickerState,
-                        layoutType = TimePickerLayoutType.Vertical,
-                        colors = TimePickerDefaults.colors()
-                    )
+            Spacer(modifier = Modifier.height(24.dp))
+            Button(
+                onClick = {
+                    startOperation = true
                 }
-            )
+            ) {
+                Text(text = "Iniciar Operación!!!")
+            }
+
         }
     }
-}
-/* El problema principal es que se mezclan dos mundos de Android, 1 el Android tradicional o nativo, este
-* usa como android.app.TimePickerDialog
-* 2. JetpackCompose, usa funciones @composables como TimePicker y AlertDialog
-*
-* El profesor enseño a usar TimePickerDialog que es una clase de Android Nativo.Pero todo el codigo
-*  se contruye con JetPack Compose
-* 3. Compose no tiene un TimePickerDialog oficial  que funcione como la clase nativa, se usa AlertDialog que es el
-* cuadro flotante con botones, y se coloco TimePicker dentro de AlertDialog, así todo se mantuvo en ecosistema
-*    de Jetpack Compose
-* En resumen ,el problema es una incompatibilidad entre librerias. la forma de crear un dialogo
-* con un selector es diferente en Jetpack Compose que en Android tradicional*/
+
+
+
+    suspend fun simulateSlowProcess(
+        onStar:()->Unit,
+        onFinish:()->Unit
+    ){
+        onStar()
+        delay(3000)
+        onFinish()
+
+    }
+
+    }
