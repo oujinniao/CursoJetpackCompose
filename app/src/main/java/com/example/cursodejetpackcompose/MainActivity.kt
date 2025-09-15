@@ -33,7 +33,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             CursoDeJetpackComposeTheme {
-                IndeterminateLinearProgressIndicator()
+                DeterminateLinearProgressIndicator()
 
             }
         }
@@ -44,60 +44,76 @@ class MainActivity : ComponentActivity() {
 //Linea indeterminada, soloindicar que la operacion esta en curso
 
     @Composable
-    fun IndeterminateLinearProgressIndicator() {
-        var isLoading by remember { mutableStateOf(true) }
-        var isCompleted by remember { mutableStateOf(false) }
+    fun DeterminateLinearProgressIndicator() {
+        var progress by remember { mutableStateOf(0f) }//0% se inicializa
 
-        LaunchedEffect(isLoading) { // si Loading es true
-            if (isLoading) {
-                delay(5000)
-                isLoading = false
-                isCompleted = true
+        var isDownLoading by remember { mutableStateOf(false) }
+
+        var downloadCompleted by remember { mutableStateOf(false) }
+
+        LaunchedEffect(isDownLoading) {
+            if (isDownLoading) {
+                downloadCompleted = false
+                while (progress < 1f) { //1f = 100%
+                     delay(50)//aqui esperamos 5 milisegundos
+                    progress += 0.05f    //aumentamos el progreso en 5%
+                }
+               isDownLoading = false
+                downloadCompleted = true
 
             }
         }
-        Column(modifier= Modifier
-            .fillMaxSize()
-            .padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(24.dp),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
 
-        ){
-            if (isLoading) { // si loading es true
-                Text(
-                    "Procesando datos",
-                    style = MaterialTheme.typography.titleMedium
-                )
+        ) {
+            Text(
+                text = "Downloading...de archivo",
+                style = MaterialTheme.typography.titleMedium)
 
                 Spacer(modifier = Modifier.height(16.dp))
 
+            if(isDownLoading){
                 LinearProgressIndicator(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(8.dp),
+                    progress =progress,
+                       modifier = Modifier
+                           .fillMaxWidth()
+                        .height(8.dp),
                     color = MaterialTheme.colorScheme.primary,
-                    trackColor = MaterialTheme.colorScheme.secondary,
-                    //progress = 0.5f,
-                    //strokeWidth = 8.dp,
-                    strokeCap = androidx.compose.ui.graphics.StrokeCap.Round,
+                    trackColor = MaterialTheme.colorScheme.surfaceVariant
+                )
+                Spacer(modifier = Modifier.height(16.dp))
 
-                    )
-            }else if (isCompleted) {
-                Text(
-                    "Datos procesados",
-                    style = MaterialTheme.typography.titleMedium )
-
-                Spacer(modifier = Modifier.height(24.dp))
-
+            Text(
+                text = "%.1f".format(progress * 100) + "%",
+                style = MaterialTheme.typography.bodyLarge)
             }
             Button(
                 onClick = {
-                    isLoading = true
-                    isCompleted = false
-                }, enabled = !isCompleted
-            ) {
-                Text("Procesando datos")
-            }
+                    if (!isDownLoading) {
+                        progress = 0f
+                        isDownLoading = true
+                    }
+                },
+                enabled = !isDownLoading
+
+            ){
+                Text(
+                    text = "Iniciar Descarga")
+           }
+         if(downloadCompleted){
+             Spacer(modifier = Modifier.height(16.dp))
+             Text(
+                 text = "Descarga completada",
+                 style = MaterialTheme.typography.bodyLarge,
+                 color = MaterialTheme.colorScheme.primary
+
+             )
+         }
 
 
         }
@@ -105,7 +121,6 @@ class MainActivity : ComponentActivity() {
     }
 
 }
-
 
 
 

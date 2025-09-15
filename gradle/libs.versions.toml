@@ -11,7 +11,7 @@ composeBom = "2025.07.00"
 constraintlayoutCompose = "1.1.1"
 constraintlayout = "2.2.1"
 coil="2.2.2"
-material3 = "1.4.0-alpha04"
+material3 = "1.2.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -31,7 +31,7 @@ androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-man
 androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 coil={ group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
 
-androidx-material3 = { group = "androidx.compose.material3", name = "material3", version.ref = "material3" }
+
 
 # ConstraintLayout para Views
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
