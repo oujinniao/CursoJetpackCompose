@@ -8,9 +8,9 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Menu
@@ -19,7 +19,7 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -29,6 +29,10 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -54,6 +58,8 @@ class MainActivity : ComponentActivity() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ScaffoldScreen() {
+    var isExpanded by remember { mutableStateOf(false) }
+
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -126,23 +132,29 @@ fun ScaffoldScreen() {
             )
         },
         floatingActionButton = {
-            FloatingActionButton(
-                onClick = { /*TODO*/ },
+            ExtendedFloatingActionButton(
+                onClick = {
+                    println("Boton flotante pulsado")
+                    isExpanded = !isExpanded
+                },
+                icon = {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.Send,
+                        contentDescription = "Enviar"
+                    )
+                },
+                text = {
+                    Text(text = "Enviar mensaje")
+                },
+                expanded = isExpanded,
                 containerColor = MaterialTheme.colorScheme.primary,
                 contentColor = MaterialTheme.colorScheme.onPrimary,
-                shape = CircleShape,
+                shape = RoundedCornerShape(16.dp),
                 elevation = FloatingActionButtonDefaults.elevation(
-                    defaultElevation = 5.dp,
-                    pressedElevation = 12.dp,
-                    hoveredElevation = 15.dp,
-                    focusedElevation = 20.dp
+                    6.dp,
+                    pressedElevation = 12.dp
                 )
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Add,
-                    contentDescription = "Agregar"
-                )
-            }
+            )
         },
         containerColor = MaterialTheme.colorScheme.onPrimaryContainer,
         content = { paddingValues ->   //contenido de la pantalla
