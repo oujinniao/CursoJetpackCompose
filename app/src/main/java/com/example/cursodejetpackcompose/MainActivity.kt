@@ -43,9 +43,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import coil.compose.rememberAsyncImagePainter
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -161,7 +161,9 @@ fun ScaffoldScreen() {
                     modifier = Modifier.padding(start = 8.dp),
                     header = {
                         Image(
-                            painter = painterResource(id = R.drawable.avatar),
+
+                        painter =rememberAsyncImagePainter("https://assets.puzzlefactory.com/puzzle/292/153/original.jpg"),
+                            //painter = painterResource(id = R.drawable.avatar),
                             contentDescription = "Avatar del usuario",
                             modifier = Modifier
                                 .padding(vertical = 12.dp)
