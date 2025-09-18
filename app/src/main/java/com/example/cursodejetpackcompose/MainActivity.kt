@@ -3,18 +3,23 @@ package com.example.cursodejetpackcompose
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Send
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
@@ -22,9 +27,8 @@ import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarDefaults
-import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationRail
+import androidx.compose.material3.NavigationRailItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -37,7 +41,9 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
@@ -62,13 +68,16 @@ class MainActivity : ComponentActivity() {
 fun ScaffoldScreen() {
     var isExpanded by remember { mutableStateOf(false) }
 
-    val items = listOf("Inicio", "Buscar", "Perfil") // lista de etiquetas
+    val items = listOf("Inicio", "Buscar", "Perfil", "Favoritos", "Ajustes") // lista de etiquetas
     val icons = listOf(
         Icons.Default.Home,
         Icons.Default.Search,
-        Icons.Default.Person) // lista de iconos
+        Icons.Default.Person,
+        Icons.Default.Favorite,
+        Icons.Default.Settings
+    ) // lista de iconos
 
-var selectedItem by rememberSaveable { mutableStateOf(0) } // variable que almacena la posicion del item seleccionado
+    var selectedItem by rememberSaveable { mutableStateOf(0) } // variable que almacena la posicion del item seleccionado
 
 
     Scaffold(
@@ -110,31 +119,8 @@ var selectedItem by rememberSaveable { mutableStateOf(0) } // variable que almac
                 )
             )
         },
-        bottomBar = {
-            // Barra inferior
-            NavigationBar(
-                modifier=Modifier.fillMaxWidth(),
-                containerColor = MaterialTheme.colorScheme.surface,
-                contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                tonalElevation = 3.dp,
-                windowInsets = NavigationBarDefaults.windowInsets
-
-            ) {
-                items.forEachIndexed { index, label ->
-
-                    NavigationBarItem(
-                        icon = { Icon(icons[index],
-                            contentDescription = label) },
-                        label = { Text(label) },
-                        alwaysShowLabel = true,
-                        selected = selectedItem == index,
-                        onClick = { selectedItem = index }
-                    )
-                }
-            }
 
 
-            },
         floatingActionButton = {
             ExtendedFloatingActionButton(
                 onClick = {
@@ -162,22 +148,67 @@ var selectedItem by rememberSaveable { mutableStateOf(0) } // variable que almac
         },
         containerColor = MaterialTheme.colorScheme.onPrimaryContainer,
         content = { paddingValues ->   //contenido de la pantalla
-            Box(
+            Row(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(paddingValues),
-                contentAlignment = Alignment.Center
+
+
             ) {
-                Text(
-                    text = "Pantalla: ${items[selectedItem]}",
-                    color = MaterialTheme.colorScheme.onPrimary,
-                    style = MaterialTheme.typography.headlineLarge,
-                    modifier = Modifier.align(Alignment.Center),
-                )
+                NavigationRail(
+                    containerColor = MaterialTheme.colorScheme.surface,
+                    contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                    modifier = Modifier.padding(start = 8.dp),
+                    header = {
+                        Image(
+                            painter = painterResource(id = R.drawable.avatar),
+                            contentDescription = "Avatar del usuario",
+                            modifier = Modifier
+                                .padding(vertical = 12.dp)
+                                .size(48.dp)
+                                .clip(CircleShape)
+                        )
+                    }
+
+                ) {
+                    items.forEachIndexed { index, label ->
+                        NavigationRailItem(
+                            selected = selectedItem == index,
+                            onClick = { selectedItem = index },
+                            icon = {
+                                Icon(
+                                    imageVector = icons[index],
+                                    contentDescription = label
+                                )
+                            },
+                            label = { Text(text = label) },
+                            alwaysShowLabel = false,
+                            enabled = true
+                        )
+                    }
+
+                }
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(paddingValues)
+                        .padding(start = 32.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = "pantalla: ${items[selectedItem]}",
+                        style = MaterialTheme.typography.headlineSmall,
+                        modifier = Modifier.align(Alignment.Center)
+                    )
+                }
             }
         }
     )
+
 }
+
+
+
 
 @Preview(showBackground = true)
 @Composable
