@@ -32,6 +32,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -86,15 +87,22 @@ class MainActivity : ComponentActivity() {
                     }
                 ) {
                     tabTitles.forEachIndexed { index, title ->
+                        val eneable = index !=1  //con este codigo bloqueamos la pestaña de favoritos
                         Tab(
                             selected = selectedTabIndex == index,
-                            onClick = { selectedTabIndex = index },
+                            onClick = {
+                                if (eneable)
+                                    selectedTabIndex = index
+
+                            },
+                                //selectedTabIndex = index },
                             modifier = Modifier.padding(horizontal = 4.dp),
-                            enabled = true,
+                            enabled = eneable,
                             text = {
                                 Text(
                                     text = title,
-                                    style = MaterialTheme.typography.labelLarge
+                                    style = MaterialTheme.typography.labelLarge,
+                                    fontSize = 16.sp
 
                                 )
                             },
