@@ -35,7 +35,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = Color.Black
                 ) {
-                    ScrollableTabRowExample()
+                    ScrollableTabRowExample()// <-- Llamada al nuevo Composable
                 }
             }
         }
