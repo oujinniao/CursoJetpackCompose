@@ -54,13 +54,15 @@ dependencies {
     implementation("androidx.compose.material:material-icons-extended:1.7.8")
     implementation(libs.androidx.foundation) //items
     implementation(libs.coil)
+    implementation(libs.navController)
 
 
 
     // ConstraintLayout
     implementation(libs.androidx.constraintlayout) // Views XML (opcional)
     implementation(libs.androidx.constraintlayout.compose)
-    implementation(libs.material3) // Jetpack Compose ✅
+    implementation(libs.material3)
+    implementation(libs.ui) // Jetpack Compose ✅
 
     // Testing
     testImplementation(libs.junit)
